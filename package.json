@@ -1,6 +1,6 @@
 {
   "name": "5h13-plans",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "private": true,
   "description": "5H13 Plans: a general project app (weddings, install jobs, software, design) that runs offline on a phone or PC.",
   "type": "module",
@@ -13,7 +13,8 @@
   "dependencies": {
     "jszip": "3.10.2",
     "react": "19.3.0",
-    "react-dom": "19.3.0"
+    "react-dom": "19.3.0",
+    "pdfjs-dist": "6.5.438"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4",

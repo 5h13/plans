@@ -29,8 +29,15 @@ export function seedLibrary(): Library {
 
 /** Library v1 (one HVAC library) → v2 (templates). Keeps the owner's settings. */
 export function migrateLibrary(lib: Library & { estimating?: unknown; stageTemplate?: unknown }): Library {
-  if ((lib.version ?? 1) >= LIBRARY_VERSION && Array.isArray(lib.templates)) return lib;
-  return { ...seedLibrary(), settings: lib.settings ?? null };
+  if (!((lib.version ?? 1) >= LIBRARY_VERSION && Array.isArray(lib.templates))) return { ...seedLibrary(), settings: lib.settings ?? null };
+  // Built-in templates the owner hasn't edited follow the app's current version; new built-ins are added.
+  const fresh = BUILT_IN_TEMPLATES.map((b) => {
+    const mine = lib.templates.find((t) => t.key === b.key);
+    return mine?.custom ? mine : structuredClone(b);
+  });
+  const own = lib.templates.filter((t) => !BUILT_IN_TEMPLATES.some((b) => b.key === t.key));
+  const templates = [...fresh, ...own];
+  return JSON.stringify(templates) === JSON.stringify(lib.templates) ? lib : { ...lib, templates };
 }
 
 export function templateOf(lib: Library, p: Pick<Project, "template_key">): ProjectTemplate {

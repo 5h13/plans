@@ -4,6 +4,8 @@ import { DeliverableScreen, PlanScreen, ScheduleScreen } from "./PlanScreens";
 import { StagesScreen } from "./StageEstimateScreens";
 import { EstimateScreen, LibraryScreen } from "./EstimateLibraryScreens";
 import { CompareReportsScreen, ExportScreen, ImportScreen, ProgressScreen, ReportScreen, RevisionsScreen } from "./ProgressExchangeScreens";
+import { ReviseContract, StartFromDocument } from "./ContractScreens";
+import { SaveAsTemplate, TemplateEditor } from "./TemplateScreens";
 import { ChangesScreen, CommentScreen, CommentsScreen, DocumentsScreen, RegistersScreen, RisksScreen } from "./RegisterScreens";
 
 Object.assign(screens, {
@@ -25,4 +27,8 @@ Object.assign(screens, {
   revisions: RevisionsScreen,
   export: ExportScreen,
   "app:import": ImportScreen,
+  "app:new-doc": StartFromDocument,
+  revise: ReviseContract,
+  "app:template": TemplateEditor,
+  "save-template": SaveAsTemplate,
 });

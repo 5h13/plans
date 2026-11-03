@@ -2,7 +2,8 @@ import { useState, type ReactNode } from "react";
 import type { Comment, EntityType, Risk } from "../lib/model";
 import { getState, mutate } from "../lib/store";
 import { go, href, useQuery } from "../lib/router";
-import { compareTexts, docxText } from "../shared/compare/text";
+import { compareTexts } from "../shared/compare/text";
+import { ACCEPT, readDocument } from "../lib/ingest/read";
 import {
   COMMENT_NEXT, addAsset, addComment, addCommentNote, addContractChange, addDocument, addIssue, addRisk, closeIssue, decideChange, labelOf, linksOf, moveComment, realiseRisk, setDocumentText, setRiskStatus,
 } from "../lib/domain/registers";
@@ -276,6 +277,7 @@ export function ChangesScreen({ p }: ScreenProps) {
     <div className="space-y-4">
       <Back p={p} />
       <PageTitle title="Changes" sub="Contractual changes: scope, fee and schedule. Engineering changes are handled in the HVAC app." />
+      <a href={href(`/p/${p.id}/revise`)} className="block rounded-xl bg-blue-700 px-4 py-3 text-sm font-semibold text-white shadow-sm active:bg-blue-800">Upload a revised contract — log its changes ›</a>
       {p.changes.length === 0 ? <Card><Empty>No changes recorded.</Empty></Card> : (
         <ul className="space-y-2">
           {[...p.changes].reverse().map((c) => (
@@ -291,6 +293,7 @@ export function ChangesScreen({ p }: ScreenProps) {
                 <span>Schedule: {c.schedule_effect_days == null ? "—" : `${c.schedule_effect_days > 0 ? "+" : ""}${c.schedule_effect_days} d`}</span>
                 {c.document_id && <span>Doc: {labelOf(p, "DOCUMENT", c.document_id)}</span>}
               </div>
+              {c.description && <details className="mt-1 text-xs text-slate-600"><summary>Details</summary><p className="mt-1 whitespace-pre-wrap">{c.description}</p></details>}
               {c.decision_note && <p className="mt-1 text-xs text-slate-600">Decision: {c.decision_note}</p>}
               {c.status === "pending_approval" && c.change_class === "contractual" && (deciding === c.id ? (
                 <form className="mt-2 space-y-2" onSubmit={(e) => {
@@ -332,11 +335,7 @@ export function ChangesScreen({ p }: ScreenProps) {
 
 // ---------------------------------------------------------------- documents & assets
 async function readFileText(file: File): Promise<string> {
-  if (/\.docx$/i.test(file.name)) {
-    return docxText(await file.arrayBuffer());
-  }
-  if (/\.(txt|md|csv|json|xml|html?)$/i.test(file.name) || file.type.startsWith("text/")) return file.text();
-  throw new Error("Use a Word (.docx) or text file. PDFs: copy the text into a .txt file first.");
+  return (await readDocument(file.name, await file.arrayBuffer())).text;
 }
 
 export function DocumentsScreen({ p }: ScreenProps) {
@@ -348,6 +347,7 @@ export function DocumentsScreen({ p }: ScreenProps) {
     <div className="space-y-4">
       <Back p={p} />
       <PageTitle title="Documents & assets" />
+      <a href={href(`/p/${p.id}/revise`)} className="block rounded-xl border border-slate-200 bg-surface px-4 py-3 text-sm font-medium text-blue-700 shadow-sm">Upload a revised contract ›</a>
       {p.documents.length === 0 ? <Card><Empty>No documents registered.</Empty></Card> : (
         <ul className="space-y-2">
           {[...p.documents].reverse().map((d) => (
@@ -357,10 +357,11 @@ export function DocumentsScreen({ p }: ScreenProps) {
                 {d.version && <Badge>v {d.version}</Badge>}
               </div>
               <p className="text-xs text-slate-600">{d.category}{d.doc_date ? ` · ${d.doc_date}` : ""}{d.location ? ` · ${d.location}` : ""}</p>
+              {d.notes && <p className="text-xs text-slate-500">{d.notes}</p>}
               <p className="mt-1 text-xs">{d.extracted_text ? <span className="text-emerald-700">Text loaded from {d.file_name} ({d.extracted_text.length.toLocaleString()} chars)</span> : <span className="text-slate-500">No text loaded</span>}</p>
               <label className="mt-2 inline-block cursor-pointer rounded-lg px-3 py-1.5 text-sm text-blue-700 ring-1 ring-slate-300">
                 {d.extracted_text ? "Replace text…" : "Load text from file…"}
-                <input type="file" accept=".docx,.txt,.md,.csv,text/*" className="hidden" onChange={(e) => {
+                <input type="file" accept={ACCEPT} className="hidden" onChange={(e) => {
                   const file = e.target.files?.[0];
                   e.target.value = "";
                   if (file) void cmd.run(async () => { const text = await readFileText(file); return mutate(p.id, (x) => setDocumentText(x, d.id, text, file.name), "document.text"); });

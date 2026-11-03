@@ -17,6 +17,8 @@ export interface Settings {
   daysPerWeek: number;
   workingDaysPerMonth: number;
   createdAt: ISOTime;
+  /** Optional AI reading of documents (off unless the owner turns it on and adds a key). The key stays on this device. */
+  ai?: { enabled: boolean; apiKey: string; model: string };
 }
 
 export interface Option { value_key: string; label: string }
@@ -51,6 +53,9 @@ export interface TemplateSection { key: DefinitionTextKey; label: string; prompt
 /** A project template: everything that makes Plans fit a kind of project. Data, not code; editable in the library. */
 export interface ProjectTemplate {
   key: string;
+  /** Made or changed by the owner (not one of the templates the app ships with). */
+  custom?: boolean;
+  basedOn?: string | null;
   name: string;
   description: string;
   method: "lines" | "area_scaled";

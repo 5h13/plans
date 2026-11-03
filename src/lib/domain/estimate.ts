@@ -249,6 +249,7 @@ export function mhSummary(p: Project) {
 const tpl = (lib: Library, key: string) => {
   const t = lib.templates.find((x) => x.key === key);
   if (!t) throw new DomainError("NOT_FOUND", "Template not found.");
+  t.custom = true; // edited here: keep the owner's values when the app updates its built-in templates
   return t;
 };
 const wpOf = (lib: Library, key: string, wpKey: string) => {

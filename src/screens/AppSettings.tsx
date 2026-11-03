@@ -2,6 +2,7 @@ import { resetAll, updateLibrary, useStore } from "../lib/store";
 import { Button, Card, Field, PageTitle, inputCls, useCommand } from "../ui/ui";
 import { formData } from "../ui/forms";
 import { DomainError } from "../lib/util";
+import { DEFAULT_MODEL, testKey } from "../lib/ingest/ai";
 
 export function AppSettings() {
   const s = useStore((x) => x.library.settings)!;
@@ -38,8 +39,9 @@ export function AppSettings() {
         </form>
       </Card>
       <Card title="Library">
-        <a className="text-sm text-blue-700" href="#/library">Estimating library (base MH, exponents, factors, rates) ›</a>
+        <a className="text-sm text-blue-700" href="#/library">Templates and estimating library ›</a>
       </Card>
+      <AiSettings />
       <Card title="Reset">
         <p className="mb-2 text-sm text-slate-600">Deletes every project and setting on this device. Export projects first if you need them.</p>
         {danger.message}
@@ -47,5 +49,41 @@ export function AppSettings() {
       </Card>
       <p className="text-center text-xs text-slate-400">5H13 Plans PWA v{__APP_VERSION__}</p>
     </div>
+  );
+}
+
+/** Optional AI reading of contracts. Offline reading always works; AI is an extra pass the owner can turn on. */
+function AiSettings() {
+  const ai = useStore((x) => x.library.settings?.ai);
+  const cmd = useCommand();
+  return (
+    <Card title="AI reading of documents (optional)">
+      <p className="mb-3 text-sm text-slate-600">
+        Contracts are always read on this device, without AI. Turn this on to add an AI pass with Claude that reads any layout and describes each revision.
+        It needs an internet connection and your own Anthropic API key. When you use it, the document text is sent to Anthropic. The key is stored only on this device.
+      </p>
+      <form className="space-y-3" onSubmit={(e) => {
+        const f = formData(e);
+        const enabled = f.fd.get("enabled") === "on";
+        const apiKey = f.s("apiKey") || ai?.apiKey || "";
+        if (enabled && !apiKey) { void cmd.run(() => { throw new DomainError("VALIDATION", "Add an API key to turn AI reading on."); }); return; }
+        void cmd.run(async () => {
+          await updateLibrary((l) => { l.settings = { ...l.settings!, ai: { enabled, apiKey, model: f.s("model") || DEFAULT_MODEL } }; });
+          return enabled ? "AI reading is on." : "AI reading is off.";
+        });
+      }}>
+        <label className="flex items-center gap-2 text-sm"><input type="checkbox" name="enabled" defaultChecked={!!ai?.enabled} className="h-4 w-4" /> Use AI when reading contracts</label>
+        <Field label="Anthropic API key" hint={ai?.apiKey ? `Saved (…${ai.apiKey.slice(-4)}). Leave blank to keep it.` : "From console.anthropic.com → API keys."}>
+          <input name="apiKey" type="password" autoComplete="off" placeholder={ai?.apiKey ? "••••••••" : "sk-ant-…"} className={inputCls} />
+        </Field>
+        <Field label="Model"><input name="model" defaultValue={ai?.model ?? DEFAULT_MODEL} className={inputCls} /></Field>
+        {cmd.message}
+        <div className="flex gap-2">
+          <Button type="submit" className="flex-1">Save</Button>
+          {ai?.apiKey && <Button variant="secondary" onClick={() => void cmd.run(async () => { await testKey(ai); return "The key works."; })}>Test</Button>}
+          {ai?.apiKey && <Button variant="ghost" onClick={() => void cmd.run(async () => { await updateLibrary((l) => { l.settings = { ...l.settings!, ai: undefined }; }); return "Key removed from this device."; })}>Remove key</Button>}
+        </div>
+      </form>
+    </Card>
   );
 }

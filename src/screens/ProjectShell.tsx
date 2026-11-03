@@ -13,7 +13,7 @@ const TABS: Array<[string, string, string]> = [
 
 export function ProjectShell({ p, tab, children }: { p: Project; tab: string; children: ReactNode }) {
   const owner = useStore((s) => s.library.settings?.ownerName);
-  const sectionOf = (t: string) => (["", "definition"].includes(t) ? "" : ["plan", "schedule", "deliverable", "stages", "estimate"].includes(t) ? "plan" : ["progress", "report", "compare"].includes(t) ? "progress" : ["registers", "comments", "comment", "risks", "changes", "documents", "doccompare"].includes(t) ? "registers" : "more");
+  const sectionOf = (t: string) => (["", "definition"].includes(t) ? "" : ["plan", "schedule", "deliverable", "stages", "estimate"].includes(t) ? "plan" : ["progress", "report", "compare"].includes(t) ? "progress" : ["registers", "comments", "comment", "risks", "changes", "documents", "doccompare", "revise"].includes(t) ? "registers" : "more");
   const active = tab === "definition" ? "more" : sectionOf(tab);
   return (
     <div className="min-h-screen pb-24">

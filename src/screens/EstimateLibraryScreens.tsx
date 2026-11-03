@@ -11,6 +11,7 @@ import type { ProjectTemplate } from "../lib/model";
 import { Badge, Button, Card, Empty, Field, PageTitle, Row, inputCls, money, useCommand } from "../ui/ui";
 import { formData } from "../ui/forms";
 import { PlanSubNav } from "./PlanScreens";
+import { TemplateList } from "./TemplateScreens";
 import type { ScreenProps } from "./registry";
 
 const hrs = (n: number) => n.toLocaleString("en-PH", { maximumFractionDigits: 1, minimumFractionDigits: 1 });
@@ -207,6 +208,8 @@ export function LibraryScreen() {
     <div className="space-y-4 p-4">
       <a href="#/" className="text-sm text-blue-700">‹ Projects</a>
       <PageTitle title="Library" sub="Project templates on this device. New estimates use these values; earlier estimates keep the values they were made with." />
+      <TemplateList />
+      <h2 className="pt-2 text-sm font-semibold uppercase tracking-wide text-slate-500">Quick edit: rates, prices and hours</h2>
       <select aria-label="Template" value={key} onChange={(e) => setKey(e.target.value)} className={inputCls}>
         {lib.templates.map((x) => <option key={x.key} value={x.key}>{x.name}</option>)}
       </select>

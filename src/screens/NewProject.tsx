@@ -21,7 +21,12 @@ export function NewProject() {
   if (!t) {
     return (
       <div className="space-y-3 p-4">
-        <PageTitle title="New project" sub="What kind of project is it? The template sets the questions, stages and starter plan. You can change everything afterwards." />
+        <PageTitle title="New project" sub="Start from the contract or project definition, or from a template." />
+        <a href="#/new-doc" className="block rounded-xl bg-blue-700 p-4 text-white shadow-sm active:bg-blue-800">
+          <span className="block text-base font-semibold">Start from a contract or definition document</span>
+          <span className="block text-sm opacity-90">Upload the Word, PDF or text file. The project, definition, dates and budget are proposed from it for you to check.</span>
+        </a>
+        <h2 className="pt-2 text-sm font-semibold uppercase tracking-wide text-slate-500">Or start from a template</h2>
         <ul className="space-y-2">
           {lib.templates.map((x) => (
             <li key={x.key}>

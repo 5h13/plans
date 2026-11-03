@@ -12,7 +12,8 @@ export function More({ p }: { p: Project; params?: string[] }) {
           { to: `${b}/stages`, label: "Stages & readiness", sub: `${p.stages.length} stages` },
           { to: `${b}/estimate`, label: "Estimate", sub: `${p.estimates.length} estimates` },
           { to: `${b}/revisions`, label: "Revisions", sub: "Save and compare project revisions" },
-          { to: `${b}/export`, label: "Export / share", sub: "Project file for desktop Plans or another device" },
+          { to: `${b}/export`, label: "Export / share", sub: "Project file for the HVAC app or another device" },
+          { to: `${b}/save-template`, label: "Save as template", sub: "Reuse this project's plan for the next one like it" },
         ]}
       />
     </div>

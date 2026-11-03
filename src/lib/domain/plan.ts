@@ -125,14 +125,48 @@ export function recordProgress(p: Project, id: string, v: { percent?: number | n
   return `${d.code} ${Math.round(pct)} %`;
 }
 
-/** Copies planned dates into the baseline (r44 / desktop: baseline changes only by approval). */
+const DONE_STATES = ["approved", "accepted", "issued"];
+const isClosed = (d: Deliverable) => ["cancelled", "superseded"].includes(d.state);
+const isDone = (d: Deliverable) => d.progress_percent >= 100 || DONE_STATES.includes(d.state);
+
+/** Open work that still needs a planned finish before the schedule can be baselined. */
+export function needsDates(p: Project) {
+  return p.deliverables.filter((d) => !isClosed(d) && !isDone(d) && !d.planned_finish);
+}
+
+/**
+ * Copies planned dates into the baseline (r44 / desktop: baseline changes only by approval).
+ * Finished work needs no plan: it is baselined on its actual dates when it has them.
+ */
 export function setScheduleBaseline(p: Project, note: string) {
-  const missing = p.deliverables.filter((d) => !d.planned_finish && !["cancelled", "superseded"].includes(d.state)).length;
-  if (missing) throw new DomainError("INCOMPLETE", `${missing} deliverable(s) have no planned finish date.`);
+  const missing = needsDates(p);
+  if (missing.length) {
+    const names = missing.slice(0, 5).map((d) => `${d.code} ${d.title}`).join("; ");
+    throw new DomainError("INCOMPLETE", `${missing.length} open item(s) have no planned finish date: ${names}${missing.length > 5 ? "; …" : ""}. Enter their dates under "Dates needed".`);
+  }
   for (const d of p.deliverables) {
-    d.baseline_start = d.planned_start;
-    d.baseline_finish = d.planned_finish;
-    d.forecast_finish ??= d.planned_finish;
+    if (isClosed(d)) continue;
+    const done = isDone(d) && !d.planned_finish;
+    d.baseline_start = done ? d.actual_start ?? d.actual_finish : d.planned_start;
+    d.baseline_finish = done ? d.actual_finish : d.planned_finish;
+    d.forecast_finish ??= done ? d.actual_finish : d.planned_finish;
   }
   return `Schedule baseline approved: ${note || "—"}`;
+}
+
+/** Sets planned dates for several items at once (the "Dates needed" form). */
+export function planDates(p: Project, rows: Array<{ id: string; start: string | null; finish: string | null }>) {
+  let n = 0;
+  for (const r of rows) {
+    if (!r.start && !r.finish) continue;
+    const d = p.deliverables.find((x) => x.id === r.id);
+    if (!d) continue;
+    checkDates(r.start, r.finish);
+    d.planned_start = r.start ?? d.planned_start;
+    d.planned_finish = r.finish ?? d.planned_finish;
+    d.forecast_finish = d.actual_finish ?? r.finish ?? d.forecast_finish;
+    n++;
+  }
+  if (!n) throw new DomainError("VALIDATION", "Enter at least one date.");
+  return `Planned dates set for ${n} item(s)`;
 }

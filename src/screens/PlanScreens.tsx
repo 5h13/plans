@@ -3,7 +3,7 @@ import type { Deliverable, Milestone } from "../lib/model";
 import { getState, mutate, useStore } from "../lib/store";
 import { templateOf } from "../lib/seed";
 import { go, href } from "../lib/router";
-import { addDeliverable, addMilestone, getPlan, recordProgress, setScheduleBaseline, updateDeliverable, updateMilestone, type MRow } from "../lib/domain/plan";
+import { addDeliverable, addMilestone, getPlan, needsDates, planDates, recordProgress, setScheduleBaseline, updateDeliverable, updateMilestone, type MRow } from "../lib/domain/plan";
 import { linksOf } from "../lib/domain/registers";
 import { Badge, Button, Card, Empty, Field, PageTitle, Pct, Row, Variance, inputCls, money, useCommand } from "../ui/ui";
 import { formData } from "../ui/forms";
@@ -161,8 +161,9 @@ export function ScheduleScreen({ p }: ScreenProps) {
     <div className="space-y-4">
       <SubNav id={p.id} at="schedule" />
       <PageTitle title="Schedule" sub={all.length ? `${all[0]} → ${all.at(-1)}` : "No dates yet"} />
+      <DatesNeeded p={p} />
       <Card title="Baseline" actions={baselined ? <Badge tone="green">set</Badge> : <Badge tone="amber">not set</Badge>}>
-        <p className="mb-3 text-sm text-slate-600">The baseline is the approved plan that variance is measured against. Setting it copies the planned dates (self-approved on mobile).</p>
+        <p className="mb-3 text-sm text-slate-600">The baseline is the approved plan that variance is measured against. Setting it copies the planned dates of open work; finished work is baselined on its actual dates (self-approved on mobile).</p>
         <form className="flex gap-2" onSubmit={(e) => {
           const f = formData(e);
           if (baselined && !window.confirm("Replace the current baseline with today's planned dates?")) return;
@@ -200,6 +201,38 @@ export function ScheduleScreen({ p }: ScreenProps) {
         </Card>
       )}
     </div>
+  );
+}
+
+/** Open items without a planned finish block the baseline: list them with date fields so the PM can plan them in one go. */
+function DatesNeeded({ p }: { p: ScreenProps["p"] }) {
+  const cmd = useCommand();
+  const missing = needsDates(p);
+  if (!missing.length) return null;
+  const ms = (id: string | null) => p.milestones.find((m) => m.id === id);
+  return (
+    <Card title={`Dates needed (${missing.length})`} actions={<Badge tone="amber">blocks the baseline</Badge>}>
+      <p className="mb-3 text-sm text-slate-600">These open items have no planned finish. Plan them here; finished items don't need dates.</p>
+      <form onSubmit={(e) => {
+        const f = formData(e);
+        void cmd.run(() => mutate(p.id, (x) => planDates(x, missing.map((d) => ({ id: d.id, start: f.opt(`s_${d.id}`), finish: f.opt(`f_${d.id}`) }))), "schedule.planned"));
+      }}>
+        <ul className="space-y-3">
+          {missing.map((d) => (
+            <li key={d.id}>
+              <div className="text-sm"><span className="font-mono text-xs text-slate-500">{d.code}</span> {d.title}</div>
+              <div className="text-xs text-slate-500">{ms(d.milestone_id)?.name ?? "No milestone"}{d.actual_start ? ` · started ${d.actual_start}` : ""}{d.progress_percent ? ` · ${Math.round(d.progress_percent)} %` : ""}</div>
+              <div className="mt-1 grid grid-cols-2 gap-2">
+                <input type="date" name={`s_${d.id}`} aria-label={`${d.code} planned start`} defaultValue={d.planned_start ?? d.actual_start ?? ""} className={inputCls} />
+                <input type="date" name={`f_${d.id}`} aria-label={`${d.code} planned finish`} className={inputCls} />
+              </div>
+            </li>
+          ))}
+        </ul>
+        <Button type="submit" className="mt-3 w-full">Save dates</Button>
+        <div className="mt-2">{cmd.message}</div>
+      </form>
+    </Card>
   );
 }
 

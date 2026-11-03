@@ -1,0 +1,11 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "Cascadia Code", "SFMono-Regular", Menlo, Consolas, monospace;
+}
+html { color-scheme: light; -webkit-tap-highlight-color: transparent; }
+body { background: #f5f7fa; color: #0f172a; font-family: var(--font-sans); overscroll-behavior-y: none; }
+.safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
+.safe-top { padding-top: env(safe-area-inset-top); }
+input, select, textarea { font-size: 16px; } /* no zoom on focus in iOS */

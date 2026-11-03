@@ -1,7 +1,7 @@
 /* 5H13 Plans service worker: the app works offline after the first visit.
    Navigations: network first (to pick up new versions), cached copy when offline.
    Assets: cache first (file names carry a content hash). */
-const CACHE = "5h13-plans-v2";
+const CACHE = "5h13-plans-v3";
 self.addEventListener("install", (e) => {
   // Cache the shell and the hashed bundles index.html points to, so the app opens offline after one visit.
   e.waitUntil(

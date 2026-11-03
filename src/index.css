@@ -1,11 +1,71 @@
 @import "tailwindcss";
 
-@theme inline {
+/*
+ * Theme: Powder Blue + Pure White + Vibrant Racing Orange on warm charcoal.
+ *   Racing Orange #F45B0B  primary actions, links, active states (Tailwind "blue" scale)
+ *   Powder Blue   #A8C9C8  progress, done / approved, success (Tailwind "emerald" scale)
+ *   Pure White    #FFFFFF  headings and primary text
+ * The slate scale is inverted for the dark surface, so existing classes keep their meaning
+ * (slate-500 = muted text, slate-200 = hairline, slate-50/100 = subtle fill).
+ */
+@theme {
+  --color-ink: #0d0c0b;
+  --color-surface: #1b1918;
+
+  --color-slate-50: #211e1d;
+  --color-slate-100: #282524;
+  --color-slate-200: #35312f;
+  --color-slate-300: #4a4542;
+  --color-slate-400: #8a827d;
+  --color-slate-500: #a39b96;
+  --color-slate-600: #bfb8b3;
+  --color-slate-700: #d9d3cf;
+  --color-slate-800: #eeeae7;
+  --color-slate-900: #ffffff;
+
+  --color-blue-50: #2d1a10;
+  --color-blue-200: #6e3313;
+  --color-blue-300: #a9450f;
+  --color-blue-600: #f45b0b;
+  --color-blue-700: #f45b0b;
+  --color-blue-800: #d94f07;
+  --color-blue-900: #ffd9c4;
+
+  --color-emerald-50: #1a2524;
+  --color-emerald-200: #3f5756;
+  --color-emerald-600: #a8c9c8;
+  --color-emerald-700: #a8c9c8;
+  --color-emerald-800: #c6dddc;
+
+  --color-amber-50: #2a2213;
+  --color-amber-300: #6d5520;
+  --color-amber-800: #f0c46a;
+  --color-amber-900: #f6d58e;
+
+  --color-red-50: #2e1614;
+  --color-red-200: #5e2724;
+  --color-red-300: #8c3632;
+  --color-red-400: #c4524c;
+  --color-red-700: #e5483e;
+  --color-red-800: #ff8f86;
+
+  --color-violet-50: #221c2d;
+  --color-violet-200: #483a63;
+  --color-violet-800: #cdbdf2;
+
   --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-mono: ui-monospace, "Cascadia Code", "SFMono-Regular", Menlo, Consolas, monospace;
 }
-html { color-scheme: light; -webkit-tap-highlight-color: transparent; }
-body { background: #f5f7fa; color: #0f172a; font-family: var(--font-sans); overscroll-behavior-y: none; }
+html { color-scheme: dark; -webkit-tap-highlight-color: transparent; }
+body {
+  background: radial-gradient(120% 80% at 50% 0%, #2a1a12 0%, #141211 45%, #0f0e0d 100%) fixed;
+  color: #f5f2f0;
+  font-family: var(--font-sans);
+  overscroll-behavior-y: none;
+}
+h1, h2 { letter-spacing: -0.01em; }
+h1 { font-weight: 800; }
 .safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
 .safe-top { padding-top: env(safe-area-inset-top); }
 input, select, textarea { font-size: 16px; } /* no zoom on focus in iOS */
+input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0.85); }

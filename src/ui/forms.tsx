@@ -88,7 +88,7 @@ export function SizeFields({ p, unitSystem }: { p?: Partial<Project>; unitSystem
       <Field label="Floor area (air-conditioned scope)" hint="Drives the man-hour estimate.">
         <div className="flex gap-2">
           <input name="area" defaultValue={shown} inputMode="decimal" className={inputCls} />
-          <select name="areaUnit" defaultValue={us ? "ft2" : "m2"} className="rounded-lg border border-slate-300 bg-white px-2">
+          <select name="areaUnit" defaultValue={us ? "ft2" : "m2"} className="rounded-lg border border-slate-300 bg-surface px-2">
             <option value="ft2">ft²</option>
             <option value="m2">m²</option>
           </select>

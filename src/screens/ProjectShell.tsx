@@ -17,17 +17,17 @@ export function ProjectShell({ p, tab, children }: { p: Project; tab: string; ch
   const active = tab === "definition" ? "more" : sectionOf(tab);
   return (
     <div className="min-h-screen pb-24">
-      <header className="safe-top sticky top-0 z-10 border-b border-slate-800 bg-slate-900 text-slate-100">
+      <header className="safe-top sticky top-0 z-10 border-b border-slate-200 bg-ink text-white">
         <div className="mx-auto flex max-w-3xl items-center gap-3 px-4 py-2.5">
-          <a href={href("/")} aria-label="All projects" className="text-xl leading-none text-slate-300">‹</a>
+          <a href={href("/")} aria-label="All projects" className="text-xl leading-none text-slate-600">‹</a>
           <div className="min-w-0 flex-1">
             <div className="truncate text-sm font-semibold">{p.name}</div>
-            <div className="truncate font-mono text-xs text-slate-400">{p.project_no} · {owner}</div>
+            <div className="truncate font-mono text-xs text-slate-500">{p.project_no} · {owner}</div>
           </div>
         </div>
       </header>
       <main className="mx-auto max-w-3xl p-4">{children}</main>
-      <nav className="safe-bottom fixed inset-x-0 bottom-0 z-10 border-t border-slate-200 bg-white">
+      <nav className="safe-bottom fixed inset-x-0 bottom-0 z-10 border-t border-slate-200 bg-surface">
         <div className="mx-auto grid max-w-3xl grid-cols-5">
           {TABS.map(([seg, label, d]) => (
             <a key={seg} href={href(`/p/${p.id}${seg ? `/${seg}` : ""}`)} className={`flex flex-col items-center gap-0.5 py-2 text-[11px] ${active === seg ? "text-blue-700" : "text-slate-500"}`}>
@@ -43,7 +43,7 @@ export function ProjectShell({ p, tab, children }: { p: Project; tab: string; ch
 
 export function MenuList({ items }: { items: Array<{ to: string; label: string; sub?: string; badge?: ReactNode }> }) {
   return (
-    <ul className="divide-y divide-slate-100 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+    <ul className="divide-y divide-slate-100 overflow-hidden rounded-xl border border-slate-200 bg-surface shadow-sm">
       {items.map((i) => (
         <li key={i.to}>
           <a href={href(i.to)} className="flex items-center justify-between gap-3 px-4 py-3 active:bg-slate-50">

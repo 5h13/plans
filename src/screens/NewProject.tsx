@@ -25,7 +25,7 @@ export function NewProject() {
         <ul className="space-y-2">
           {lib.templates.map((x) => (
             <li key={x.key}>
-              <button onClick={() => setKey(x.key)} className="block w-full rounded-xl border border-slate-200 bg-white p-4 text-left shadow-sm active:bg-slate-50">
+              <button onClick={() => setKey(x.key)} className="block w-full rounded-xl border border-slate-200 bg-surface p-4 text-left shadow-sm active:bg-slate-50">
                 <span className="block font-medium">{x.name}</span>
                 <span className="block text-sm text-slate-600">{x.description}</span>
                 <span className="mt-1 block text-xs text-slate-500">{x.stages.length} stages · {x.workPackages.length ? `${x.workPackages.length} starter ${x.terms.deliverables.toLowerCase()}` : "plan by hand"} · {x.scheduling === "backward" ? `backward from the ${x.anchorLabel.toLowerCase()}` : "forward from the start"}</span>

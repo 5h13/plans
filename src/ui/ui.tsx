@@ -2,7 +2,7 @@ import { useState, type ReactNode } from "react";
 import { DomainError } from "../lib/util";
 
 export const inputCls =
-  "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-base shadow-sm focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600 disabled:bg-slate-100";
+  "w-full rounded-lg border border-slate-300 bg-surface px-3 py-2 text-base shadow-sm focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600 disabled:bg-slate-100";
 
 const TONES: Record<string, string> = {
   green: "bg-emerald-50 text-emerald-800 ring-emerald-200",
@@ -19,7 +19,7 @@ export function Badge({ children, tone = "slate" }: { children: ReactNode; tone?
 
 export function Card({ title, children, actions, className = "" }: { title?: ReactNode; children: ReactNode; actions?: ReactNode; className?: string }) {
   return (
-    <section className={`rounded-xl border border-slate-200 bg-white shadow-sm ${className}`}>
+    <section className={`rounded-xl border border-slate-200 bg-surface shadow-sm ${className}`}>
       {(title || actions) && (
         <header className="flex items-center justify-between gap-2 border-b border-slate-100 px-4 py-2.5">
           <h2 className="text-sm font-semibold">{title}</h2>
@@ -47,10 +47,10 @@ export function Empty({ children }: { children: ReactNode }) {
 
 type Variant = "primary" | "secondary" | "danger" | "approve" | "ghost";
 const BTN: Record<Variant, string> = {
-  primary: "bg-blue-700 text-white active:bg-blue-800",
-  secondary: "bg-white text-slate-800 ring-1 ring-slate-300 active:bg-slate-100",
+  primary: "bg-blue-700 font-semibold text-white active:bg-blue-800",
+  secondary: "bg-surface text-slate-800 ring-1 ring-slate-300 active:bg-slate-100",
   danger: "bg-red-700 text-white active:bg-red-800",
-  approve: "bg-emerald-700 text-white active:bg-emerald-800",
+  approve: "bg-emerald-700 font-semibold text-slate-50 active:bg-emerald-800",
   ghost: "text-blue-700",
 };
 export function Button({ children, onClick, variant = "primary", disabled, className = "", type = "button" }: { children: ReactNode; onClick?: () => void; variant?: Variant; disabled?: boolean; className?: string; type?: "button" | "submit" }) {

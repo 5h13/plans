@@ -26,7 +26,7 @@ export function ProgressScreen({ p }: ScreenProps) {
     <div className="space-y-4">
       <PageTitle title="Progress" sub="Report progress by period. Approval applies it to the plan and freezes a checksummed snapshot." />
       {reports.length === 0 ? <Card><Empty>No progress reports yet.</Empty></Card> : (
-        <ul className="divide-y divide-slate-100 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+        <ul className="divide-y divide-slate-100 overflow-hidden rounded-xl border border-slate-200 bg-surface shadow-sm">
           {reports.map((r) => (
             <li key={r.id}>
               <a href={href(`/p/${p.id}/report/${r.id}`)} className="flex items-center justify-between gap-3 px-4 py-3 active:bg-slate-50">

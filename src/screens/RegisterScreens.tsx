@@ -63,7 +63,7 @@ export function CommentsScreen({ p }: ScreenProps) {
     <div className="space-y-4">
       <Back p={p} />
       <PageTitle title="Comments" sub="Review comments, requirements and queries, tracked to verification." />
-      <form className="space-y-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm" onSubmit={(e) => {
+      <form className="space-y-3 rounded-xl border border-slate-200 bg-surface p-4 shadow-sm" onSubmit={(e) => {
         const f = formData(e);
         const on = f.opt("on");
         const [t, id] = on ? on.split(":") : [];
@@ -83,10 +83,10 @@ export function CommentsScreen({ p }: ScreenProps) {
         {cmd.message}
       </form>
       <div className="flex gap-1 rounded-lg bg-slate-100 p-1 text-sm">
-        {(["open", "all"] as const).map((k) => <button key={k} onClick={() => setFilter(k)} className={`flex-1 rounded-md py-1.5 ${filter === k ? "bg-white font-medium shadow-sm" : "text-slate-600"}`}>{k === "open" ? "Open" : "All"}</button>)}
+        {(["open", "all"] as const).map((k) => <button key={k} onClick={() => setFilter(k)} className={`flex-1 rounded-md py-1.5 ${filter === k ? "bg-slate-200 font-medium text-slate-900 shadow-sm" : "text-slate-600"}`}>{k === "open" ? "Open" : "All"}</button>)}
       </div>
       {list.length === 0 ? <Empty>No comments.</Empty> : (
-        <ul className="divide-y divide-slate-100 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+        <ul className="divide-y divide-slate-100 overflow-hidden rounded-xl border border-slate-200 bg-surface shadow-sm">
           {list.map((c) => (
             <li key={c.id}>
               <a href={href(`/p/${p.id}/comment/${c.id}`)} className="flex items-center justify-between gap-3 px-4 py-2.5 active:bg-slate-50">
@@ -279,7 +279,7 @@ export function ChangesScreen({ p }: ScreenProps) {
       {p.changes.length === 0 ? <Card><Empty>No changes recorded.</Empty></Card> : (
         <ul className="space-y-2">
           {[...p.changes].reverse().map((c) => (
-            <li key={c.id} className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+            <li key={c.id} className="rounded-xl border border-slate-200 bg-surface p-4 shadow-sm">
               <div className="flex justify-between gap-2">
                 <span className="text-sm font-medium"><span className="font-mono text-xs text-slate-500">{c.change_no}</span> {c.title}</span>
                 <Badge tone={c.status === "approved" ? "green" : c.status === "rejected" ? "red" : c.status === "pending_approval" ? "amber" : "slate"}>{c.status.replace(/_/g, " ")}</Badge>
@@ -300,7 +300,7 @@ export function ChangesScreen({ p }: ScreenProps) {
                 }}>
                   <input name="note" placeholder="Decision note (self-approved on mobile)" className={inputCls} />
                   <div className="flex gap-2">
-                    <button type="submit" value="approved" className="min-h-10 flex-1 rounded-lg bg-emerald-700 px-3 text-sm font-medium text-white">Approve</button>
+                    <button type="submit" value="approved" className="min-h-10 flex-1 rounded-lg bg-emerald-700 px-3 text-sm font-medium text-slate-50">Approve</button>
                     <button type="submit" value="rejected" className="min-h-10 flex-1 rounded-lg bg-red-700 px-3 text-sm font-medium text-white">Reject</button>
                   </div>
                 </form>
@@ -351,7 +351,7 @@ export function DocumentsScreen({ p }: ScreenProps) {
       {p.documents.length === 0 ? <Card><Empty>No documents registered.</Empty></Card> : (
         <ul className="space-y-2">
           {[...p.documents].reverse().map((d) => (
-            <li key={d.id} className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+            <li key={d.id} className="rounded-xl border border-slate-200 bg-surface p-4 shadow-sm">
               <div className="flex justify-between gap-2">
                 <span className="text-sm font-medium"><span className="font-mono text-xs text-slate-500">{d.doc_no}</span> {d.title}</span>
                 {d.version && <Badge>v {d.version}</Badge>}

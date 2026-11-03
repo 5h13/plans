@@ -12,10 +12,10 @@ import { screens } from "./screens/registry";
 
 function TopBar() {
   return (
-    <header className="safe-top sticky top-0 z-10 border-b border-slate-800 bg-slate-900 text-slate-100">
+    <header className="safe-top sticky top-0 z-10 border-b border-slate-200 bg-ink text-white">
       <div className="mx-auto flex max-w-3xl items-center justify-between px-4 py-2.5">
         <a href="#/" className="flex items-center gap-2 font-semibold"><span className="grid h-6 w-6 place-items-center rounded bg-blue-600 text-xs font-bold">5H</span>5H13 Plans</a>
-        <nav className="flex gap-4 text-sm text-slate-300"><a href="#/library">Library</a><a href="#/settings">Settings</a></nav>
+        <nav className="flex gap-4 text-sm text-slate-600"><a href="#/library">Library</a><a href="#/settings">Settings</a></nav>
       </div>
     </header>
   );

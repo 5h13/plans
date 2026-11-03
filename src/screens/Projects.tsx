@@ -15,7 +15,7 @@ export function Projects() {
         sub={`On this device · ${owner ?? ""}`}
         actions={
           <div className="flex gap-2">
-            <a href={href("/import")} className="rounded-lg bg-white px-3 py-2 text-sm font-medium ring-1 ring-slate-300">Import</a>
+            <a href={href("/import")} className="rounded-lg bg-surface px-3 py-2 text-sm font-medium ring-1 ring-slate-300">Import</a>
             <a href={href("/new")} className="rounded-lg bg-blue-700 px-3 py-2 text-sm font-medium text-white">New</a>
           </div>
         }
@@ -26,7 +26,7 @@ export function Projects() {
         <ul className="space-y-2">
           {projects.map((p) => (
             <li key={p.id}>
-              <a href={href(`/p/${p.id}`)} className="block rounded-xl border border-slate-200 bg-white p-3 shadow-sm active:bg-slate-50">
+              <a href={href(`/p/${p.id}`)} className="block rounded-xl border border-slate-200 bg-surface p-3 shadow-sm active:bg-slate-50">
                 <div className="flex items-baseline justify-between gap-2">
                   <span className="font-mono text-xs text-slate-500">{p.project_no}</span>
                   {p.definition.status === "confirmed" ? <Badge tone="green">defined</Badge> : <Badge tone="amber">draft</Badge>}

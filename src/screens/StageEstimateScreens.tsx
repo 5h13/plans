@@ -73,7 +73,7 @@ function StageCard({ p, s, gates, first, last, run }: { p: ScreenProps["p"]; s: 
   const blockers = gates.reduce((t, g) => t + g.blockers, 0);
   const m = (fn: Parameters<typeof mutate>[1], ev: string) => run(() => mutate(p.id, fn, ev));
   return (
-    <section className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+    <section className="overflow-hidden rounded-xl border border-slate-200 bg-surface shadow-sm">
       <button className="flex w-full items-center justify-between gap-2 px-4 py-3 text-left" onClick={() => setOpen(!open)}>
         <span className="min-w-0">
           <span className="block text-sm font-semibold">{s.name}{s.revisit_count ? <span className="ml-1 text-xs font-normal text-slate-500">revisited ×{s.revisit_count}</span> : null}</span>
